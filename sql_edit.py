@@ -7,13 +7,13 @@ ori_workname = ''
 ori_formtitle = ''
 ori_workcode = ''
 ori_id = ''
-ori_path = '/content/drive/MyDrive/***'
+ori_path = '/content/drive/MyDrive/original/SQL'
 
 ##########################################
 # 作成するファイル情報
 lists = []
 # ブックの取得
-excel_path = '/content/drive/MyDrive/テスト/Book1.xlsx'
+excel_path = '/content/drive/MyDrive/excel/Book2.xlsx'
 actBook = openpyxl.load_workbook(excel_path)
 # 最初のシートを取得
 actSheet = actBook.worksheets[0]
@@ -26,20 +26,17 @@ for row in actSheet.iter_rows(min_row=2, max_row=maxRow, min_col=1, max_col=maxC
     contents = []
     # for セル変数 in 行変数
     for cell in row:
-        # セルを取得して''の中に入れる
-        text = f'\'{cell.value}\''
-    contents.append(text)
-
-lists.append(contents)
+        contents.append(cell.value)
+    lists.append(contents)
 actBook.close
 ##########################################
-
+print(lists)
 for list in lists:
     workname = list[0]
     formtitle = list[1]
     workcode = list[2]
     id = list[3]
-    path = f'/content/drive/MyDrive/***/SQL/{formtitle}'
+    path = f'/content/drive/MyDrive/編集後フォルダ/{formtitle}'
 
     if not os.path.exists(path):
         # ディレクトリが存在しない場合、ディレクトリを作成する
@@ -76,10 +73,10 @@ for list in lists:
         elif after_file.endswith('.sql'):
             char_code = 'cp932'
         else:
-            char_code = 'utf-8'
+            char_code = 'cp932'
 
         # ファイル情報を1行ごとに分割したリストとして取得して、作成するファイル情報に合わせて文字置換、contentsに代入していく
-        with open(dest, mode='r', encoding=char_code, newline='\n', errors='ignore') as f:
+        with open(dest, mode='r', encoding=char_code, newline='¥n', errors='ignore') as f:
             data_lines = f.readlines()
             for data_line in data_lines:
                 data_line = data_line.replace(ori_formtitle, formtitle).replace(
@@ -88,7 +85,7 @@ for list in lists:
         f.close()
 
         # contentsに代入された1行ごとのテキストをファイルに書き込んでいく
-        with open(dest, mode='w', encoding=char_code, newline='\n', errors='ignore') as f:
+        with open(dest, mode='w', encoding=char_code, newline='¥n', errors='ignore') as f:
             for content in contents:
                 f.write(content)
         f.close()
