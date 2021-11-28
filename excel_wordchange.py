@@ -3,18 +3,10 @@ import glob
 import os
 import openpyxl
 
-# ①対象ファイルのパス
+# 対象ファイルのパス
 path = 'path'
-# ②対象ファイル種別
+# 対象ファイル種別
 fileType = '*.xlsx'
-
-# ③置換対象としたいシート名（特定のシートのみ置換をしたい場合に適用）
-# sheetName = ['table_bbb', 'table_ccc']
-
-# ④置換前の文字データ
-before_wordlist = ['test_flg']
-# ⑤置換後の文字データ
-after_wordlist = ['aabbcc']
 
 ##########################################
 excel_path = '/content/drive/MyDrive/excel/Book2.xlsx'
@@ -26,8 +18,8 @@ first_col = 1
 actBook = openpyxl.load_workbook(excel_path)
 actSheet = actBook.worksheets[0]
 # 作成するファイル情報
-original_file_contents = []
-lists = []
+before_wordlist = []
+after_wordlist = []
 # for 行変数 in シート変数.iter_rows(開始行,終了行,開始列,終了列)
 for row in actSheet.iter_rows(min_row=first_row, max_row=actSheet.max_row, min_col=first_col, max_col=actSheet.max_column):
     # excelシートの１行を1行のテキストとして保存する配列
@@ -35,15 +27,14 @@ for row in actSheet.iter_rows(min_row=first_row, max_row=actSheet.max_row, min_c
     # for セル変数 in 行変数
     for cell in row:
         if cell.row == first_row:
-            original_file_contents.append(cell.value)
+            before_wordlist.append(cell.value)
         else:
             contents.append(cell.value)
-    lists.append(contents)
+    after_wordlist.append(contents)
 actBook.close
-print(original_file_contents)
-print(lists)
+print(before_wordlist)
+print(after_wordlist)
 ##########################################
-
 
 # 「①対象ファイルのパス」配下にある全てのExcelファイルのパスを出力
 books_path = glob.glob(os.path.join(path, fileType))
@@ -55,19 +46,15 @@ for book in books_path:
     bookFlg = 0
     # ブックの取得
     actBook = openpyxl.load_workbook(book)
+    print(actBook)
     # すべてのシートの特定の文字列を置換する
     for actSheet in actBook:
         for i in range(0,len(before_wordlist) - 1,1):
             actSheet.title = actSheet.title.replace(before_wordlist[i], after_wordlist[i])
-
+    print(actBook.sheetnames)
     # シート数分ループ
     for actSheetName in actBook.sheetnames:
         count = 0
-
-        # 特定のシートのみ置換をしたい場合に以下を適用し、インデントを調整する
-        # シート名の判定(「③置換対象としたいシート名」との比較)
-        # if actSheetName in sheetName:
-
         # アクティブシートを取得
         actSheet = actBook[actSheetName]
         # 該当シートの最大行を取得
