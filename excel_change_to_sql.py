@@ -3,9 +3,7 @@ import os
 import openpyxl
 import pathlib
 
-
 excel_path = '/content/drive/MyDrive/テスト/Book1.xlsx'
-
 dir_path = '/content/drive/MyDrive/SQL'
 if not os.path.exists(dir_path):
     # ディレクトリが存在しない場合、ディレクトリを作成する
@@ -21,13 +19,11 @@ def num2alpha(num):
     else:
         return num2alpha(num//26)+chr(64+num % 26)
 
-
 # ブックの取得
 actBook = openpyxl.load_workbook(excel_path)
 
-# lists = []
-
 i = 1
+# lists = []
 # シート数分ループ
 for actSheetName in actBook.sheetnames:
     
